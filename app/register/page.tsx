@@ -69,7 +69,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12">
       <div className="max-w-2xl w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Student Registration
         </h2>
 
@@ -82,63 +82,77 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-gray-700 mb-2">First Name</label>
+              <label className="block text-gray-700 mb-2 font-medium">
+                First Name
+              </label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
+                placeholder="John"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Last Name</label>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Last Name
+              </label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
+                placeholder="Doe"
                 required
               />
             </div>
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Email</label>
+            <label className="block text-gray-700 mb-2 font-medium">
+              Email
+            </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
+              placeholder="john@example.com"
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-gray-700 mb-2">Matric Number</label>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Matric Number
+              </label>
               <input
                 type="text"
                 name="matricNumber"
                 value={formData.matricNumber}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
+                placeholder="ST2024001"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Date of Birth</label>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Date of Birth
+              </label>
               <input
                 type="date"
                 name="dateOfBirth"
                 value={formData.dateOfBirth}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
                 required
               />
             </div>
@@ -146,24 +160,29 @@ export default function RegisterPage() {
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-gray-700 mb-2">Department</label>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Department
+              </label>
               <input
                 type="text"
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
+                placeholder="Computer Science"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Level</label>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Level
+              </label>
               <select
                 name="level"
                 value={formData.level}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
                 required
               >
                 <option value="100">100 Level</option>
@@ -176,19 +195,22 @@ export default function RegisterPage() {
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <label className="block text-gray-700 mb-2">Password</label>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Password
+              </label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
+                placeholder="Min 6 characters"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">
+              <label className="block text-gray-700 mb-2 font-medium">
                 Confirm Password
               </label>
               <input
@@ -196,7 +218,8 @@ export default function RegisterPage() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
+                placeholder="Re-enter password"
                 required
               />
             </div>
@@ -205,7 +228,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium"
           >
             {loading ? "Registering..." : "Register"}
           </button>
@@ -213,7 +236,10 @@ export default function RegisterPage() {
 
         <p className="text-center mt-4 text-gray-600">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link
+            href="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Login here
           </Link>
         </p>
