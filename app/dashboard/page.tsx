@@ -24,7 +24,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push("/auth/login");
     }
   }, [status, router]);
 
@@ -125,7 +125,7 @@ export default function DashboardPage() {
 
         <div className="absolute bottom-0 w-64 p-4 border-t bg-white">
           <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={() => signOut({ callbackUrl: "/auth/login" })}
             className="w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
           >
             🚪 Logout
@@ -203,28 +203,32 @@ export default function DashboardPage() {
 
             {/* Quick Actions */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-xl font-semibold mb-4">Quick Actions</h3>
+              <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                Quick Actions
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
                   <div className="text-2xl mb-2">📝</div>
-                  <h4 className="font-semibold">Register Courses</h4>
-                  <p className="text-sm text-gray-600">
+                  <h4 className="font-semibold text-gray-800">
+                    Register Courses
+                  </h4>
+                  <p className="text-sm text-gray-700">
                     Add courses for this semester
                   </p>
                 </button>
 
                 <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
                   <div className="text-2xl mb-2">💳</div>
-                  <h4 className="font-semibold">Make Payment</h4>
-                  <p className="text-sm text-gray-600">
+                  <h4 className="font-semibold text-gray-800">Make Payment</h4>
+                  <p className="text-sm text-gray-700">
                     Pay fees via Mobile Money
                   </p>
                 </button>
 
                 <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
                   <div className="text-2xl mb-2">📄</div>
-                  <h4 className="font-semibold">View Results</h4>
-                  <p className="text-sm text-gray-600">
+                  <h4 className="font-semibold text-gray-800">View Results</h4>
+                  <p className="text-sm text-gray-700">
                     Check your exam results
                   </p>
                 </button>
