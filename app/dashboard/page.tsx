@@ -63,15 +63,17 @@ export default function DashboardPage() {
       <aside className="w-64 bg-white shadow-lg">
         <div className="p-6 border-b">
           <h1 className="text-2xl font-bold text-blue-600">Student Portal</h1>
-          <p className="text-sm text-gray-500 mt-1">University System</p>
+          <p className="text-sm text-gray-700 font-semibold mt-1">
+            University System
+          </p>
         </div>
 
         <nav className="p-4">
           <button
             onClick={() => setActiveTab("overview")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "overview"
-                ? "bg-blue-50 text-blue-600 font-medium"
+                ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -80,9 +82,9 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("profile")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "profile"
-                ? "bg-blue-50 text-blue-600 font-medium"
+                ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -91,9 +93,9 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("courses")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "courses"
-                ? "bg-blue-50 text-blue-600 font-medium"
+                ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -102,9 +104,9 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("results")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "results"
-                ? "bg-blue-50 text-blue-600 font-medium"
+                ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -113,9 +115,9 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("payments")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "payments"
-                ? "bg-blue-50 text-blue-600 font-medium"
+                ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
             }`}
           >
@@ -140,7 +142,7 @@ export default function DashboardPage() {
           <h2 className="text-3xl font-bold text-gray-800">
             Welcome, {studentData.firstName}!
           </h2>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-700 font-semibold mt-1">
             {studentData.matricNumber} • {studentData.department}
           </p>
         </div>
@@ -153,7 +155,9 @@ export default function DashboardPage() {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-500 text-sm">Current Level</p>
+                    <p className="text-gray-700 text-sm font-bold">
+                      Current Level
+                    </p>
                     <p className="text-2xl font-bold text-gray-800 mt-1">
                       {studentData.level}
                     </p>
@@ -167,7 +171,9 @@ export default function DashboardPage() {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-500 text-sm">Enrolled Courses</p>
+                    <p className="text-gray-700 text-sm font-bold">
+                      Enrolled Courses
+                    </p>
                     <p className="text-2xl font-bold text-gray-800 mt-1">0</p>
                   </div>
                   <div className="bg-green-100 p-3 rounded-lg">
@@ -179,7 +185,9 @@ export default function DashboardPage() {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-500 text-sm">Pending Fees</p>
+                    <p className="text-gray-700 text-sm font-bold">
+                      Pending Fees
+                    </p>
                     <p className="text-2xl font-bold text-gray-800 mt-1">-</p>
                   </div>
                   <div className="bg-yellow-100 p-3 rounded-lg">
@@ -191,7 +199,7 @@ export default function DashboardPage() {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-500 text-sm">GPA</p>
+                    <p className="text-gray-700 text-sm font-bold">GPA</p>
                     <p className="text-2xl font-bold text-gray-800 mt-1">-</p>
                   </div>
                   <div className="bg-purple-100 p-3 rounded-lg">
@@ -240,11 +248,13 @@ export default function DashboardPage() {
         {/* Profile Tab */}
         {activeTab === "profile" && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-2xl font-semibold mb-6">Student Profile</h3>
+            <h3 className="text-2xl font-semibold mb-6 text-gray-800">
+              Student Profile
+            </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   First Name
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -253,7 +263,7 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Last Name
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -262,7 +272,7 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Matriculation Number
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -271,16 +281,14 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
-                  Email
-                </label>
+                <label className="text-sm text-gray-700 font-bold">Email</label>
                 <p className="text-lg text-gray-800 mt-1">
                   {session?.user?.email}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Department
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -289,7 +297,7 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Current Level
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -298,7 +306,7 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Enrollment Year
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -307,7 +315,7 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Date of Birth
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -316,7 +324,7 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Phone Number
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
@@ -325,7 +333,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="text-sm text-gray-500 font-medium">
+                <label className="text-sm text-gray-700 font-bold">
                   Address
                 </label>
                 <p className="text-lg text-gray-800 mt-1">
