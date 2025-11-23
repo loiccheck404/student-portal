@@ -254,7 +254,10 @@ export default function DashboardPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   First Name
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -263,7 +266,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Last Name
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -272,7 +278,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Matriculation Number
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -281,7 +290,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Email
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -290,7 +302,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Department
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -299,7 +314,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Current Level
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -308,7 +326,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Enrollment Year
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -317,7 +338,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Date of Birth
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -326,7 +350,10 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Phone Number
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
@@ -335,7 +362,10 @@ export default function DashboardPage() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
                   Address
                 </label>
                 <p className="text-xl text-gray-900 mt-2">
