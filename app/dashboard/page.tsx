@@ -254,91 +254,91 @@ export default function DashboardPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   First Name
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.firstName}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Last Name
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.lastName}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Matriculation Number
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.matricNumber}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Email
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {session?.user?.email}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Department
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.department}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Current Level
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.level}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Enrollment Year
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.enrollmentYear}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Date of Birth
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {new Date(studentData.dateOfBirth).toLocaleDateString()}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Phone Number
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.phone || "Not provided"}
                 </p>
               </div>
 
               <div className="md:col-span-2">
-                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-sans">
+                <label className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif">
                   Address
                 </label>
-                <p className="text-xl text-gray-900 mt-2 font-serif">
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.address || "Not provided"}
                 </p>
               </div>
