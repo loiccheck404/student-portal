@@ -21,10 +21,11 @@ export default function DashboardPage() {
   const router = useRouter();
   const [studentData, setStudentData] = useState<StudentData | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/login");
+      router.push("/login");
     }
   }, [status, router]);
 
@@ -46,6 +47,11 @@ export default function DashboardPage() {
     }
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+  };
+
   if (status === "loading" || !studentData) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -59,9 +65,65 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+      {/* Mobile Header with Hamburger */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-md z-50 p-4 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-blue-600">Student Portal</h1>
+          <p className="text-xs text-gray-700 font-semibold">
+            University System
+          </p>
+        </div>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-2 rounded-lg hover:bg-gray-100"
+        >
+          <svg
+            className="w-6 h-6 text-gray-800"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            {mobileMenuOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="w-64 bg-white shadow-lg">
-        <div className="p-6 border-b">
+      <aside
+        className={`
+        fixed lg:static top-16 lg:top-0 bottom-0 left-0 z-40
+        w-64 bg-white shadow-lg
+        transform transition-transform duration-300 ease-in-out
+        ${
+          mobileMenuOpen
+            ? "translate-x-0"
+            : "-translate-x-full lg:translate-x-0"
+        }
+      `}
+      >
+        <div className="p-6 border-b hidden lg:block">
           <h1 className="text-2xl font-bold text-blue-600">Student Portal</h1>
           <p className="text-sm text-gray-700 font-semibold mt-1">
             University System
@@ -70,7 +132,7 @@ export default function DashboardPage() {
 
         <nav className="p-4">
           <button
-            onClick={() => setActiveTab("overview")}
+            onClick={() => handleTabChange("overview")}
             className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "overview"
                 ? "bg-blue-50 text-blue-600 font-bold"
@@ -81,7 +143,7 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab("profile")}
+            onClick={() => handleTabChange("profile")}
             className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "profile"
                 ? "bg-blue-50 text-blue-600 font-bold"
@@ -92,7 +154,7 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab("courses")}
+            onClick={() => handleTabChange("courses")}
             className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "courses"
                 ? "bg-blue-50 text-blue-600 font-bold"
@@ -103,7 +165,7 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab("results")}
+            onClick={() => handleTabChange("results")}
             className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "results"
                 ? "bg-blue-50 text-blue-600 font-bold"
@@ -114,7 +176,7 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab("payments")}
+            onClick={() => handleTabChange("payments")}
             className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "payments"
                 ? "bg-blue-50 text-blue-600 font-bold"
@@ -127,8 +189,8 @@ export default function DashboardPage() {
 
         <div className="absolute bottom-0 w-64 p-4 border-t bg-white">
           <button
-            onClick={() => signOut({ callbackUrl: "/auth/login" })}
-            className="w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-semibold"
           >
             🚪 Logout
           </button>
@@ -136,10 +198,10 @@ export default function DashboardPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-4 lg:p-8 pt-20 lg:pt-8">
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-800">
             Welcome, {studentData.firstName}!
           </h2>
           <p className="text-gray-700 font-semibold mt-1">
@@ -151,7 +213,7 @@ export default function DashboardPage() {
         {activeTab === "overview" && (
           <div>
             {/* Dashboard Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -247,8 +309,8 @@ export default function DashboardPage() {
 
         {/* Profile Tab */}
         {activeTab === "profile" && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-2xl font-semibold mb-6 text-gray-800">
+          <div className="bg-white rounded-lg shadow p-4 lg:p-6">
+            <h3 className="text-xl lg:text-2xl font-semibold mb-6 text-gray-800">
               Student Profile
             </h3>
 
