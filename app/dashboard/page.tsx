@@ -1,136 +1,350 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@prisma/client";
-import LogoutButton from "../../components/LogoutButton";
+"use client";
 
-const prisma = new PrismaClient();
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default async function DashboardPage() {
-  const session = await getServerSession(authOptions);
+interface StudentData {
+  firstName: string;
+  lastName: string;
+  matricNumber: string;
+  department: string;
+  level: string;
+  enrollmentYear: number;
+  phone: string | null;
+  address: string | null;
+  dateOfBirth: string;
+}
 
-  // Redirect to login if not authenticated
-  if (!session) {
-    redirect("/login");
+export default function DashboardPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [studentData, setStudentData] = useState<StudentData | null>(null);
+  const [activeTab, setActiveTab] = useState("overview");
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/login");
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetchStudentData();
+    }
+  }, [session]);
+
+  const fetchStudentData = async () => {
+    try {
+      const response = await fetch("/api/student/profile");
+      if (response.ok) {
+        const data = await response.json();
+        setStudentData(data);
+      }
+    } catch (error) {
+      console.error("Error fetching student data:", error);
+    }
+  };
+
+  if (status === "loading" || !studentData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
   }
-
-  // Fetch student data
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    include: { student: true },
-  });
-
-  if (!user || !user.student) {
-    return <div>Student data not found</div>;
-  }
-
-  const student = user.student;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-blue-600 text-white p-6 shadow-md">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Student Portal</h1>
-          <LogoutButton />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar Navigation */}
+      <aside className="w-64 bg-white shadow-lg">
+        <div className="p-6 border-b">
+          <h1 className="text-2xl font-bold text-blue-600">Student Portal</h1>
+          <p className="text-sm text-gray-500 mt-1">University System</p>
         </div>
-      </div>
+
+        <nav className="p-4">
+          <button
+            onClick={() => setActiveTab("overview")}
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+              activeTab === "overview"
+                ? "bg-blue-50 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            📊 Overview
+          </button>
+
+          <button
+            onClick={() => setActiveTab("profile")}
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+              activeTab === "profile"
+                ? "bg-blue-50 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            👤 My Profile
+          </button>
+
+          <button
+            onClick={() => setActiveTab("courses")}
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+              activeTab === "courses"
+                ? "bg-blue-50 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            📚 Courses
+          </button>
+
+          <button
+            onClick={() => setActiveTab("results")}
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+              activeTab === "results"
+                ? "bg-blue-50 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            📝 Results
+          </button>
+
+          <button
+            onClick={() => setActiveTab("payments")}
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors ${
+              activeTab === "payments"
+                ? "bg-blue-50 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            💰 Payments
+          </button>
+        </nav>
+
+        <div className="absolute bottom-0 w-64 p-4 border-t bg-white">
+          <button
+            onClick={() => signOut({ callbackUrl: "/auth/login" })}
+            className="w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            🚪 Logout
+          </button>
+        </div>
+      </aside>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Welcome Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Welcome, {student.firstName} {student.lastName}!
+      <main className="flex-1 p-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-800">
+            Welcome, {studentData.firstName}!
           </h2>
-          <p className="text-gray-600">Matric Number: {student.matricNumber}</p>
+          <p className="text-gray-600 mt-1">
+            {studentData.matricNumber} • {studentData.department}
+          </p>
         </div>
 
-        {/* Student Information */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">
-            Your Information
-          </h3>
+        {/* Overview Tab */}
+        {activeTab === "overview" && (
+          <div>
+            {/* Dashboard Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-500 text-sm">Current Level</p>
+                    <p className="text-2xl font-bold text-gray-800 mt-1">
+                      {studentData.level}
+                    </p>
+                  </div>
+                  <div className="bg-blue-100 p-3 rounded-lg">
+                    <span className="text-2xl">🎓</span>
+                  </div>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-gray-600 font-medium">First Name</p>
-              <p className="text-gray-900">{student.firstName}</p>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-500 text-sm">Enrolled Courses</p>
+                    <p className="text-2xl font-bold text-gray-800 mt-1">0</p>
+                  </div>
+                  <div className="bg-green-100 p-3 rounded-lg">
+                    <span className="text-2xl">📚</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-500 text-sm">Pending Fees</p>
+                    <p className="text-2xl font-bold text-gray-800 mt-1">-</p>
+                  </div>
+                  <div className="bg-yellow-100 p-3 rounded-lg">
+                    <span className="text-2xl">💰</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-500 text-sm">GPA</p>
+                    <p className="text-2xl font-bold text-gray-800 mt-1">-</p>
+                  </div>
+                  <div className="bg-purple-100 p-3 rounded-lg">
+                    <span className="text-2xl">📊</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <p className="text-gray-600 font-medium">Last Name</p>
-              <p className="text-gray-900">{student.lastName}</p>
-            </div>
+            {/* Quick Actions */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-xl font-semibold mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
+                  <div className="text-2xl mb-2">📝</div>
+                  <h4 className="font-semibold">Register Courses</h4>
+                  <p className="text-sm text-gray-600">
+                    Add courses for this semester
+                  </p>
+                </button>
 
-            <div>
-              <p className="text-gray-600 font-medium">Email</p>
-              <p className="text-gray-900">{user.email}</p>
-            </div>
+                <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
+                  <div className="text-2xl mb-2">💳</div>
+                  <h4 className="font-semibold">Make Payment</h4>
+                  <p className="text-sm text-gray-600">
+                    Pay fees via Mobile Money
+                  </p>
+                </button>
 
-            <div>
-              <p className="text-gray-600 font-medium">Matric Number</p>
-              <p className="text-gray-900">{student.matricNumber}</p>
+                <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
+                  <div className="text-2xl mb-2">📄</div>
+                  <h4 className="font-semibold">View Results</h4>
+                  <p className="text-sm text-gray-600">
+                    Check your exam results
+                  </p>
+                </button>
+              </div>
             </div>
+          </div>
+        )}
 
-            <div>
-              <p className="text-gray-600 font-medium">Department</p>
-              <p className="text-gray-900">{student.department}</p>
-            </div>
+        {/* Profile Tab */}
+        {activeTab === "profile" && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-2xl font-semibold mb-6">Student Profile</h3>
 
-            <div>
-              <p className="text-gray-600 font-medium">Level</p>
-              <p className="text-gray-900">{student.level} Level</p>
-            </div>
-
-            <div>
-              <p className="text-gray-600 font-medium">Date of Birth</p>
-              <p className="text-gray-900">
-                {new Date(student.dateOfBirth).toLocaleDateString()}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-gray-600 font-medium">Enrollment Year</p>
-              <p className="text-gray-900">{student.enrollmentYear}</p>
-            </div>
-
-            {student.phone && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <p className="text-gray-600 font-medium">Phone</p>
-                <p className="text-gray-900">{student.phone}</p>
+                <label className="text-sm text-gray-500 font-medium">
+                  First Name
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.firstName}
+                </p>
               </div>
-            )}
 
-            {student.address && (
-              <div className="col-span-2">
-                <p className="text-gray-600 font-medium">Address</p>
-                <p className="text-gray-900">{student.address}</p>
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Last Name
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.lastName}
+                </p>
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-3 gap-4 mt-6">
-          <div className="bg-white rounded-lg shadow-md p-6 text-center">
-            <h4 className="font-bold text-gray-800 mb-2">
-              Course Registration
-            </h4>
-            <p className="text-gray-600 text-sm">Coming soon</p>
-          </div>
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Matriculation Number
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.matricNumber}
+                </p>
+              </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 text-center">
-            <h4 className="font-bold text-gray-800 mb-2">View Results</h4>
-            <p className="text-gray-600 text-sm">Coming soon</p>
-          </div>
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Email
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {session?.user?.email}
+                </p>
+              </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 text-center">
-            <h4 className="font-bold text-gray-800 mb-2">Pay Fees</h4>
-            <p className="text-gray-600 text-sm">Coming soon</p>
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Department
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.department}
+                </p>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Current Level
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.level}
+                </p>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Enrollment Year
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.enrollmentYear}
+                </p>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Date of Birth
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {new Date(studentData.dateOfBirth).toLocaleDateString()}
+                </p>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500 font-medium">
+                  Phone Number
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.phone || "Not provided"}
+                </p>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="text-sm text-gray-500 font-medium">
+                  Address
+                </label>
+                <p className="text-lg text-gray-800 mt-1">
+                  {studentData.address || "Not provided"}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
+
+        {/* Other Tabs (Coming Soon) */}
+        {["courses", "results", "payments"].includes(activeTab) && (
+          <div className="bg-white rounded-lg shadow p-12 text-center">
+            <div className="text-6xl mb-4">🚧</div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+              Coming Soon
+            </h3>
+            <p className="text-gray-600">
+              This feature will be available in the next development phase.
+            </p>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
