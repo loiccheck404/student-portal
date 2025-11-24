@@ -37,6 +37,10 @@ export default function DashboardPage() {
     phone: "",
     address: "",
   });
+  const [validationErrors, setValidationErrors] = useState({
+    phone: "",
+    address: "",
+  });
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -76,6 +80,33 @@ export default function DashboardPage() {
   };
 
   const handleSaveProfile = async () => {
+    // Validate form
+    const errors = { phone: "", address: "" };
+    let hasError = false;
+
+    // Validate phone (optional, but if provided must be valid)
+    if (editForm.phone && editForm.phone.trim()) {
+      const phoneRegex = /^[0-9]{9,15}$/;
+      if (!phoneRegex.test(editForm.phone.replace(/\s/g, ""))) {
+        errors.phone = "Phone must be 9-15 digits";
+        hasError = true;
+      }
+    }
+
+    // Validate address (optional, but if provided must be at least 5 characters)
+    if (editForm.address && editForm.address.trim()) {
+      if (editForm.address.trim().length < 5) {
+        errors.address = "Address must be at least 5 characters";
+        hasError = true;
+      }
+    }
+
+    setValidationErrors(errors);
+
+    if (hasError) {
+      return;
+    }
+
     setIsSaving(true);
 
     try {
@@ -85,8 +116,8 @@ export default function DashboardPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone: editForm.phone,
-          address: editForm.address,
+          phone: editForm.phone.trim() || null,
+          address: editForm.address.trim() || null,
         }),
       });
 
@@ -94,6 +125,7 @@ export default function DashboardPage() {
         const updatedStudent = await response.json();
         setStudentData(updatedStudent);
         setIsEditing(false);
+        setValidationErrors({ phone: "", address: "" });
         alert("Profile updated successfully!");
       } else {
         alert("Failed to update profile. Please try again.");
@@ -490,15 +522,27 @@ export default function DashboardPage() {
                   Phone Number
                 </label>
                 {isEditing ? (
-                  <input
-                    type="tel"
-                    value={editForm.phone}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, phone: e.target.value })
-                    }
-                    className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="Enter phone number"
-                  />
+                  <div>
+                    <input
+                      type="tel"
+                      value={editForm.phone}
+                      onChange={(e) => {
+                        setEditForm({ ...editForm, phone: e.target.value });
+                        setValidationErrors({ ...validationErrors, phone: "" });
+                      }}
+                      className={`w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
+                        validationErrors.phone
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
+                      placeholder="Enter phone number"
+                    />
+                    {validationErrors.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {validationErrors.phone}
+                      </p>
+                    )}
+                  </div>
                 ) : (
                   <p className="text-xl text-gray-900 mt-2">
                     {studentData.phone || "Not provided"}
@@ -515,15 +559,30 @@ export default function DashboardPage() {
                   Address
                 </label>
                 {isEditing ? (
-                  <textarea
-                    value={editForm.address}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, address: e.target.value })
-                    }
-                    className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="Enter your address"
-                    rows={3}
-                  />
+                  <div>
+                    <textarea
+                      value={editForm.address}
+                      onChange={(e) => {
+                        setEditForm({ ...editForm, address: e.target.value });
+                        setValidationErrors({
+                          ...validationErrors,
+                          address: "",
+                        });
+                      }}
+                      className={`w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
+                        validationErrors.address
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
+                      placeholder="Enter your address"
+                      rows={3}
+                    />
+                    {validationErrors.address && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {validationErrors.address}
+                      </p>
+                    )}
+                  </div>
                 ) : (
                   <p className="text-xl text-gray-900 mt-2">
                     {studentData.address || "Not provided"}
