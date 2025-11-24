@@ -31,6 +31,12 @@ export default function DashboardPage() {
   const [studentData, setStudentData] = useState<StudentData | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editForm, setEditForm] = useState({
+    phone: "",
+    address: "",
+  });
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -54,9 +60,50 @@ export default function DashboardPage() {
     }
   }, [session]);
 
+  // Initialize edit form when studentData loads
+  useEffect(() => {
+    if (studentData) {
+      setEditForm({
+        phone: studentData.phone || "",
+        address: studentData.address || "",
+      });
+    }
+  }, [studentData]);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     setMobileMenuOpen(false);
+  };
+
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+
+    try {
+      const response = await fetch("/api/student/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: editForm.phone,
+          address: editForm.address,
+        }),
+      });
+
+      if (response.ok) {
+        const updatedStudent = await response.json();
+        setStudentData(updatedStudent);
+        setIsEditing(false);
+        alert("Profile updated successfully!");
+      } else {
+        alert("Failed to update profile. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (status === "loading" || !studentData) {
@@ -309,9 +356,21 @@ export default function DashboardPage() {
         {/* Profile Tab */}
         {activeTab === "profile" && (
           <div className="bg-white rounded-lg shadow p-4 lg:p-6">
-            <h3 className="text-xl lg:text-2xl font-semibold mb-6 text-gray-800">
-              Student Profile
-            </h3>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl lg:text-2xl font-semibold text-gray-800">
+                Student Profile
+              </h3>
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                  isEditing
+                    ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
+              >
+                {isEditing ? "Cancel" : "Edit Profile"}
+              </button>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -363,15 +422,25 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <p className="text-sm text-gray-600 mb-1">DEPARTMENT</p>
-                <p className="font-semibold text-gray-900 mb-4">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
+                  Department
+                </label>
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.department.name}
                 </p>
               </div>
 
               <div>
-                <p className="text-sm text-gray-600 mb-1">FACULTY</p>
-                <p className="font-semibold text-gray-900 mb-4">
+                <label
+                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
+                  style={{ textShadow: "0.5px 0 0 currentColor" }}
+                >
+                  Faculty
+                </label>
+                <p className="text-xl text-gray-900 mt-2">
                   {studentData.faculty.name}
                 </p>
               </div>
@@ -412,6 +481,7 @@ export default function DashboardPage() {
                 </p>
               </div>
 
+              {/* PHONE - EDITABLE */}
               <div>
                 <label
                   className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
@@ -419,11 +489,24 @@ export default function DashboardPage() {
                 >
                   Phone Number
                 </label>
-                <p className="text-xl text-gray-900 mt-2">
-                  {studentData.phone || "Not provided"}
-                </p>
+                {isEditing ? (
+                  <input
+                    type="tel"
+                    value={editForm.phone}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, phone: e.target.value })
+                    }
+                    className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="Enter phone number"
+                  />
+                ) : (
+                  <p className="text-xl text-gray-900 mt-2">
+                    {studentData.phone || "Not provided"}
+                  </p>
+                )}
               </div>
 
+              {/* ADDRESS - EDITABLE */}
               <div className="md:col-span-2">
                 <label
                   className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
@@ -431,11 +514,36 @@ export default function DashboardPage() {
                 >
                   Address
                 </label>
-                <p className="text-xl text-gray-900 mt-2">
-                  {studentData.address || "Not provided"}
-                </p>
+                {isEditing ? (
+                  <textarea
+                    value={editForm.address}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, address: e.target.value })
+                    }
+                    className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="Enter your address"
+                    rows={3}
+                  />
+                ) : (
+                  <p className="text-xl text-gray-900 mt-2">
+                    {studentData.address || "Not provided"}
+                  </p>
+                )}
               </div>
             </div>
+
+            {/* Save Button */}
+            {isEditing && (
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={isSaving}
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-colors disabled:bg-gray-400"
+                >
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
