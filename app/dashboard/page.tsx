@@ -8,12 +8,21 @@ interface StudentData {
   firstName: string;
   lastName: string;
   matricNumber: string;
-  department: string;
   level: string;
   enrollmentYear: number;
   phone: string | null;
   address: string | null;
   dateOfBirth: string;
+  department: {
+    // Change from string to object
+    name: string;
+    code: string;
+  };
+  faculty: {
+    // ADD THIS
+    name: string;
+    code: string;
+  };
 }
 
 export default function DashboardPage() {
@@ -30,22 +39,20 @@ export default function DashboardPage() {
   }, [status, router]);
 
   useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await fetch("/api/student/profile");
+        const data = await response.json();
+        setStudentData(data);
+      } catch (error) {
+        console.error("Error fetching student data:", error);
+      }
+    };
+
     if (session?.user?.email) {
       fetchStudentData();
     }
   }, [session]);
-
-  const fetchStudentData = async () => {
-    try {
-      const response = await fetch("/api/student/profile");
-      if (response.ok) {
-        const data = await response.json();
-        setStudentData(data);
-      }
-    } catch (error) {
-      console.error("Error fetching student data:", error);
-    }
-  };
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -197,7 +204,7 @@ export default function DashboardPage() {
             Welcome, {studentData.firstName}!
           </h2>
           <p className="text-gray-700 font-semibold mt-1">
-            {studentData.matricNumber} • {studentData.department}
+            {studentData.matricNumber} • {studentData.department.name}
           </p>
         </div>
 
@@ -356,14 +363,16 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label
-                  className="text-sm text-gray-800 font-extrabold uppercase tracking-wider font-serif"
-                  style={{ textShadow: "0.5px 0 0 currentColor" }}
-                >
-                  Department
-                </label>
-                <p className="text-xl text-gray-900 mt-2">
-                  {studentData.department}
+                <p className="text-sm text-gray-600 mb-1">DEPARTMENT</p>
+                <p className="font-semibold text-gray-900 mb-4">
+                  {studentData.department.name}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-600 mb-1">FACULTY</p>
+                <p className="font-semibold text-gray-900 mb-4">
+                  {studentData.faculty.name}
                 </p>
               </div>
 

@@ -15,7 +15,22 @@ export async function GET() {
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       include: {
-        student: true,
+        student: {
+          include: {
+            faculty: {
+              select: {
+                name: true,
+                code: true,
+              },
+            },
+            department: {
+              select: {
+                name: true,
+                code: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -26,7 +41,7 @@ export async function GET() {
       );
     }
 
-    // Return student data
+    // Return student data with faculty and department
     return NextResponse.json(user.student);
   } catch (error) {
     console.error("Error fetching student profile:", error);
