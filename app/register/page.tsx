@@ -36,7 +36,9 @@ export default function RegisterPage() {
   });
 
   const [faculties, setFaculties] = useState<Faculty[]>([]);
-  const [filteredDepartments, setFilteredDepartments] = useState<Department[]>([]);
+  const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(
+    []
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +50,9 @@ export default function RegisterPage() {
   // Update departments when faculty changes
   useEffect(() => {
     if (formData.facultyId) {
-      const selectedFaculty = faculties.find((f) => f.id === formData.facultyId);
+      const selectedFaculty = faculties.find(
+        (f) => f.id === formData.facultyId
+      );
       setFilteredDepartments(selectedFaculty?.departments || []);
       // Reset department when faculty changes
       setFormData((prev) => ({ ...prev, departmentId: "" }));
@@ -61,13 +65,16 @@ export default function RegisterPage() {
     try {
       const response = await fetch("/api/public/faculties");
       const data = await response.json();
-      setFaculties(data.faculties);
+      setFaculties(data.faculties || []); // Add || [] to prevent undefined
     } catch (error) {
       console.error("Error fetching faculties:", error);
+      setFaculties([]); // Set empty array on error
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -360,7 +367,10 @@ export default function RegisterPage() {
 
         <p className="text-center text-gray-600 mt-4">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline font-medium">
+          <Link
+            href="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Login here
           </Link>
         </p>
