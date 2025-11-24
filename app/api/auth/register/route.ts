@@ -1,21 +1,23 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const {
-      email,
-      password,
       firstName,
       lastName,
+      email,
+      password,
       matricNumber,
       dateOfBirth,
-      department,
+      phone,
+      address,
+      facultyId,
+      departmentId,
       level,
+      enrollmentYear,
     } = body;
 
     // Check if user already exists
@@ -25,7 +27,7 @@ export async function POST(request: Request) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "User with this email already exists" },
+        { error: "Email already registered" },
         { status: 400 }
       );
     }
@@ -46,31 +48,51 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user and student in a transaction
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        role: "student",
-        student: {
-          create: {
-            matricNumber,
-            firstName,
-            lastName,
-            dateOfBirth: new Date(dateOfBirth),
-            department,
-            level,
-            enrollmentYear: new Date().getFullYear(),
-          },
+    const result = await prisma.$transaction(async (tx) => {
+      // Create user
+      const user = await tx.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          role: "student",
         },
-      },
+      });
+
+      // Create student profile
+      const student = await tx.student.create({
+        data: {
+          userId: user.id,
+          matricNumber,
+          firstName,
+          lastName,
+          dateOfBirth: new Date(dateOfBirth),
+          phone: phone || null,
+          address: address || null,
+          facultyId,
+          departmentId,
+          level,
+          enrollmentYear: parseInt(enrollmentYear),
+        },
+      });
+
+      return { user, student };
     });
 
     return NextResponse.json(
-      { message: "Registration successful", userId: user.id },
+      {
+        message: "Registration successful",
+        user: {
+          id: result.user.id,
+          email: result.user.email,
+        },
+      },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Registration error:", error);
-    return NextResponse.json({ error: "Registration failed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Registration failed. Please try again." },
+      { status: 500 }
+    );
   }
 }
