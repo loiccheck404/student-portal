@@ -1,7 +1,4 @@
 // app/dashboard/courses/page.tsx
-// UPDATED: app/dashboard/courses/page.tsx
-// CHANGES: Made user info text darker and bolder for better visibility
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -81,7 +78,6 @@ export default function CoursesPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Update local state
         setCourses((prev) =>
           prev.map((course) =>
             course.id === courseId
@@ -119,7 +115,6 @@ export default function CoursesPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Update local state
         setCourses((prev) =>
           prev.map((course) =>
             course.id === courseId
@@ -185,7 +180,28 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header - MORE VISIBLE TEXT */}
+        {/* Back Button */}
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-4 transition-colors"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          Back to Dashboard
+        </button>
+
+        {/* Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
             Course Registration
@@ -271,6 +287,12 @@ export default function CoursesPage() {
                 ? "You haven't registered for any courses yet."
                 : `No ${filter} courses available.`}
             </p>
+            {courses.length === 0 && (
+              <p className="text-gray-400 text-sm mt-2">
+                Note: Courses must match your level ({student?.level}) and
+                department.
+              </p>
+            )}
           </div>
         )}
       </div>
