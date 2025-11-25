@@ -180,10 +180,10 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Back Button */}
+        {/* Back Button - ADDED cursor-pointer */}
         <button
           onClick={() => router.push("/dashboard")}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-4 transition-colors"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-4 transition-colors cursor-pointer"
         >
           <svg
             className="w-5 h-5"
@@ -223,13 +223,13 @@ export default function CoursesPage() {
           electiveCourses={electiveCourses}
         />
 
-        {/* Filter Tabs */}
+        {/* Filter Tabs - ADDED cursor-pointer */}
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           {["All", "Registered", "Major", "Minor", "Elective"].map((tab) => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
-              className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
+              className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors cursor-pointer ${
                 filter === tab
                   ? "bg-blue-600 text-white"
                   : "bg-white text-gray-600 hover:bg-gray-50"

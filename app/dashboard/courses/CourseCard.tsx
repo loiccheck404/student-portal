@@ -72,12 +72,12 @@ export default function CourseCard({
         </div>
       </div>
 
-      {/* Action Button */}
+      {/* Action Button - ADDED cursor-pointer */}
       {course.isRegistered ? (
         <button
           onClick={() => onUnregister(course.id)}
           disabled={loading}
-          className="w-full py-2 bg-red-50 text-red-600 rounded-md font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2 bg-red-50 text-red-600 rounded-md font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {loading ? "Processing..." : "Drop Course"}
         </button>
@@ -85,7 +85,7 @@ export default function CourseCard({
         <button
           onClick={() => onRegister(course.id)}
           disabled={loading || isFull}
-          className="w-full py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {loading ? "Processing..." : isFull ? "Course Full" : "Register"}
         </button>
