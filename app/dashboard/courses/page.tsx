@@ -1,4 +1,7 @@
 // app/dashboard/courses/page.tsx
+// UPDATED: app/dashboard/courses/page.tsx
+// CHANGES: Made user info text darker and bolder for better visibility
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -182,13 +185,13 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header - MORE VISIBLE TEXT */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
             Course Registration
           </h1>
           {student && (
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-900 font-semibold mt-2 text-lg">
               {student.firstName} {student.lastName} • Level {student.level} •{" "}
               {student.department.name}
             </p>

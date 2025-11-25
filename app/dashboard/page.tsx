@@ -232,12 +232,8 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => handleTabChange("courses")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
-              activeTab === "courses"
-                ? "bg-blue-50 text-blue-600 font-bold"
-                : "text-gray-700 hover:bg-gray-50"
-            }`}
+            onClick={() => router.push("/dashboard/courses")}
+            className="w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold text-gray-700 hover:bg-gray-50"
           >
             📚 Courses
           </button>
@@ -276,10 +272,10 @@ export default function DashboardPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 lg:p-8 pt-20 lg:pt-8">
-        {/* Header */}
+      <main className="flex-1 p-4 lg:p-8 lg:pt-6 mt-16 lg:mt-0">
+        {/* Welcome Header */}
         <div className="mb-8">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-800">
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
             Welcome, {studentData.firstName}!
           </h2>
           <p className="text-gray-700 font-semibold mt-1">
@@ -355,12 +351,15 @@ export default function DashboardPage() {
                 Quick Actions
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
-                  <div className="text-2xl mb-2">📝</div>
-                  <h4 className="font-semibold text-gray-800">
+                <button
+                  onClick={() => router.push("/dashboard/courses")}
+                  className="p-4 lg:p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+                >
+                  <div className="text-3xl lg:text-4xl mb-2">📝</div>
+                  <h4 className="font-semibold text-gray-900 mb-1">
                     Register Courses
                   </h4>
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-600">
                     Add courses for this semester
                   </p>
                 </button>
