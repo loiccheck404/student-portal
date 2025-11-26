@@ -32,9 +32,23 @@ export default function NotificationBell() {
 
   useEffect(() => {
     fetchNotifications();
+
     // Refresh every 30 seconds
     const interval = setInterval(fetchNotifications, 30000);
-    return () => clearInterval(interval);
+
+    // Listen for course actions
+    const handleCourseAction = () => {
+      setTimeout(fetchNotifications, 1000); // Delay to ensure DB is updated
+    };
+
+    window.addEventListener("courseRegistered", handleCourseAction);
+    window.addEventListener("courseDropped", handleCourseAction);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("courseRegistered", handleCourseAction);
+      window.removeEventListener("courseDropped", handleCourseAction);
+    };
   }, []);
 
   const markAsRead = async (notificationId: string, link: string | null) => {

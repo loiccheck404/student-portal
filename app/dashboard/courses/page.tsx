@@ -89,7 +89,7 @@ export default function CoursesPage() {
               : course
           )
         );
-        alert("Successfully registered for course!");
+        window.dispatchEvent(new Event("courseRegistered"));
       } else {
         alert(data.error || "Failed to register");
       }
@@ -126,7 +126,7 @@ export default function CoursesPage() {
               : course
           )
         );
-        alert("Successfully dropped course!");
+        window.dispatchEvent(new Event("courseDropped"));
       } else {
         alert(data.error || "Failed to unregister");
       }
