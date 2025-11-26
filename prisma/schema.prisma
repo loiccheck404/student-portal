@@ -41,6 +41,7 @@ model Student {
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   registrations   CourseRegistration[]
   grades          Grade[]
+  notifications   Notification[]
 }
 
 // NEW: Faculty table
@@ -126,4 +127,20 @@ model Grade {
   @@unique([studentId, courseId, semester]) // One grade per course per semester
   @@index([studentId])
   @@index([courseId])
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  title       String
+  message     String
+  type        String   // "grade", "payment", "course", "announcement"
+  isRead      Boolean  @default(false)
+  link        String?  // Optional link to related page
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([isRead])
 }

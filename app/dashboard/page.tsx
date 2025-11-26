@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import NotificationBell from "../components/NotificationBell";
 
 interface StudentData {
   firstName: string;
@@ -159,33 +160,37 @@ export default function DashboardPage() {
             University System
           </p>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded-lg hover:bg-gray-100"
-        >
-          <svg
-            className="w-6 h-6 text-gray-800"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-lg hover:bg-gray-100"
           >
-            {mobileMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6 text-gray-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {mobileMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Sidebar Navigation */}
@@ -274,13 +279,16 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 p-4 lg:p-8 lg:pt-6 mt-16 lg:mt-0">
         {/* Welcome Header */}
-        <div className="mb-8">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
-            Welcome, {studentData.firstName}!
-          </h2>
-          <p className="text-gray-700 font-semibold mt-1">
-            {studentData.matricNumber} • {studentData.department.name}
-          </p>
+        <div className="flex items-center justify-between mb-6">
+          <div className="mb-8">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+              Welcome, {studentData.firstName}!
+            </h2>
+            <p className="text-gray-700 font-semibold mt-1">
+              {studentData.matricNumber} • {studentData.department.name}
+            </p>
+          </div>
+          <NotificationBell />
         </div>
 
         {/* Overview Tab */}
