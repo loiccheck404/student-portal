@@ -183,22 +183,9 @@ export default function CoursesPage() {
         {/* Back Button - ADDED cursor-pointer */}
         <button
           onClick={() => router.push("/dashboard")}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-4 transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold mb-4 cursor-pointer px-4 py-2 rounded-lg border border-transparent hover:border-blue-200 transition-all"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          Back to Dashboard
+          ← Back to Dashboard
         </button>
 
         {/* Header */}

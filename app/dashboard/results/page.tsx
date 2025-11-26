@@ -81,10 +81,11 @@ export default function ResultsPage() {
         <div className="mb-6">
           <button
             onClick={() => router.push("/dashboard")}
-            className="flex items-center text-blue-600 hover:text-blue-700 font-semibold mb-4 cursor-pointer"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold mb-4 cursor-pointer px-4 py-2 rounded-lg border border-transparent hover:border-blue-200 transition-all"
           >
             ← Back to Dashboard
           </button>
+
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
             My Results
           </h1>
