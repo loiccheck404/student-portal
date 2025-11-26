@@ -80,6 +80,16 @@ export async function POST(request: NextRequest) {
       }),
     ]);
 
+    await prisma.notification.create({
+      data: {
+        studentId: user.student.id,
+        title: "Course Registration Successful",
+        message: `You have successfully registered for ${course.courseCode} - ${course.courseName}`,
+        type: "course",
+        link: "/dashboard/courses",
+      },
+    });
+
     return NextResponse.json({ message: "Successfully registered" });
   } catch (error) {
     console.error("Error registering for course:", error);
@@ -132,6 +142,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    }
+
     // Unregister and increase available spots
     await prisma.$transaction([
       prisma.courseRegistration.delete({
@@ -146,6 +164,16 @@ export async function DELETE(request: NextRequest) {
         },
       }),
     ]);
+
+    await prisma.notification.create({
+      data: {
+        studentId: user.student.id,
+        title: "Course Dropped",
+        message: `You have dropped ${course.courseCode} - ${course.courseName}`,
+        type: "course",
+        link: "/dashboard/courses",
+      },
+    });
 
     return NextResponse.json({ message: "Successfully unregistered" });
   } catch (error) {
