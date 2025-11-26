@@ -29,6 +29,7 @@ export async function GET() {
                 code: true,
               },
             },
+            registrations: true, // ✅ CHANGED from courseRegistrations to registrations
           },
         },
       },
@@ -41,8 +42,11 @@ export async function GET() {
       );
     }
 
-    // Return student data with faculty and department
-    return NextResponse.json(user.student);
+    // Return student data with enrolled courses count
+    return NextResponse.json({
+      ...user.student,
+      enrolledCourses: user.student.registrations.length, // ✅ CHANGED
+    });
   } catch (error) {
     console.error("Error fetching student profile:", error);
     return NextResponse.json(
@@ -52,7 +56,6 @@ export async function GET() {
   }
 }
 
-// ADD THIS ENTIRE PUT FUNCTION AFTER THE GET FUNCTION:
 export async function PUT(request: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -84,10 +87,14 @@ export async function PUT(request: Request) {
       include: {
         faculty: { select: { name: true, code: true } },
         department: { select: { name: true, code: true } },
+        registrations: true, // ✅ CHANGED
       },
     });
 
-    return NextResponse.json(updatedStudent);
+    return NextResponse.json({
+      ...updatedStudent,
+      enrolledCourses: updatedStudent.registrations.length, // ✅ CHANGED
+    });
   } catch (error) {
     console.error("Error updating student profile:", error);
     return NextResponse.json(
