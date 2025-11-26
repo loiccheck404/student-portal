@@ -210,7 +210,7 @@ export default function DashboardPage() {
         <nav className="p-4">
           <button
             onClick={() => handleTabChange("overview")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold cursor-pointer ${
               activeTab === "overview"
                 ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
@@ -221,7 +221,7 @@ export default function DashboardPage() {
 
           <button
             onClick={() => handleTabChange("profile")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold cursor-pointer ${
               activeTab === "profile"
                 ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
@@ -232,14 +232,14 @@ export default function DashboardPage() {
 
           <button
             onClick={() => router.push("/dashboard/courses")}
-            className="w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold text-gray-700 hover:bg-gray-50"
+            className="w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold text-gray-700 hover:bg-gray-50 cursor-pointer"
           >
             📚 Courses
           </button>
 
           <button
             onClick={() => router.push("/dashboard/results")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold cursor-pointer ${
               activeTab === "results"
                 ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
@@ -250,7 +250,7 @@ export default function DashboardPage() {
 
           <button
             onClick={() => handleTabChange("payments")}
-            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
+            className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold  cursor-pointer ${
               activeTab === "payments"
                 ? "bg-blue-50 text-blue-600 font-bold"
                 : "text-gray-700 hover:bg-gray-50"
@@ -263,7 +263,7 @@ export default function DashboardPage() {
         <div className="absolute bottom-0 w-64 p-4 border-t bg-white">
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+            className="w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-semibold cursor-pointer"
           >
             🚪 Logout
           </button>
@@ -354,7 +354,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button
                   onClick={() => router.push("/dashboard/courses")}
-                  className="p-4 lg:p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+                  className="p-4 lg:p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left cursor-pointer"
                 >
                   <div className="text-3xl lg:text-4xl mb-2">📝</div>
                   <h4 className="font-semibold text-gray-900 mb-1">
@@ -365,7 +365,7 @@ export default function DashboardPage() {
                   </p>
                 </button>
 
-                <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
+                <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left cursor-pointer">
                   <div className="text-2xl mb-2">💳</div>
                   <h4 className="font-semibold text-gray-800">Make Payment</h4>
                   <p className="text-sm text-gray-700">
@@ -375,7 +375,7 @@ export default function DashboardPage() {
 
                 <button
                   onClick={() => router.push("/dashboard/results")}
-                  className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+                  className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left cursor-pointer"
                 >
                   <div className="text-2xl mb-2">📄</div>
                   <h4 className="font-semibold text-gray-800">View Results</h4>

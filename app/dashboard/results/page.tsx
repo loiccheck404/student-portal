@@ -81,7 +81,7 @@ export default function ResultsPage() {
         <div className="mb-6">
           <button
             onClick={() => router.push("/dashboard")}
-            className="flex items-center text-blue-600 hover:text-blue-700 font-semibold mb-4"
+            className="flex items-center text-blue-600 hover:text-blue-700 font-semibold mb-4 cursor-pointer"
           >
             ← Back to Dashboard
           </button>
