@@ -238,7 +238,7 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => handleTabChange("results")}
+            onClick={() => router.push("/dashboard/results")}
             className={`w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold ${
               activeTab === "results"
                 ? "bg-blue-50 text-blue-600 font-bold"
@@ -373,7 +373,10 @@ export default function DashboardPage() {
                   </p>
                 </button>
 
-                <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left">
+                <button
+                  onClick={() => router.push("/dashboard/results")}
+                  className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+                >
                   <div className="text-2xl mb-2">📄</div>
                   <h4 className="font-semibold text-gray-800">View Results</h4>
                   <p className="text-sm text-gray-700">
