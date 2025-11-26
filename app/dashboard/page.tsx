@@ -22,6 +22,7 @@ interface StudentData {
     code: string;
   };
   enrolledCourses: number;
+  gpa: string;
 }
 
 export default function DashboardPage() {
@@ -336,7 +337,9 @@ export default function DashboardPage() {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-700 text-sm font-bold">GPA</p>
+                    <p className="text-gray-700 text-sm font-bold">
+                      {studentData.gpa}
+                    </p>
                     <p className="text-2xl font-bold text-gray-800 mt-1">-</p>
                   </div>
                   <div className="bg-purple-100 p-3 rounded-lg">

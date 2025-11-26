@@ -29,7 +29,7 @@ export async function GET() {
                 code: true,
               },
             },
-            registrations: true, // ✅ CHANGED from courseRegistrations to registrations
+            registrations: true,
           },
         },
       },
@@ -42,10 +42,32 @@ export async function GET() {
       );
     }
 
-    // Return student data with enrolled courses count
+    // Calculate GPA
+    const grades = await prisma.grade.findMany({
+      where: { studentId: user.student.id },
+      include: {
+        course: {
+          select: { credits: true },
+        },
+      },
+    });
+
+    let totalPoints = 0;
+    let totalCredits = 0;
+
+    grades.forEach((grade) => {
+      totalPoints += grade.gradePoint * grade.course.credits;
+      totalCredits += grade.course.credits;
+    });
+
+    const gpa =
+      totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00";
+
+    // Return student data with enrolled courses count and GPA
     return NextResponse.json({
       ...user.student,
-      enrolledCourses: user.student.registrations.length, // ✅ CHANGED
+      enrolledCourses: user.student.registrations.length,
+      gpa,
     });
   } catch (error) {
     console.error("Error fetching student profile:", error);
