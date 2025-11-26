@@ -14,15 +14,14 @@ interface StudentData {
   address: string | null;
   dateOfBirth: string;
   department: {
-    // Change from string to object
     name: string;
     code: string;
   };
   faculty: {
-    // ADD THIS
     name: string;
     code: string;
   };
+  enrolledCourses: number;
 }
 
 export default function DashboardPage() {
@@ -310,7 +309,9 @@ export default function DashboardPage() {
                     <p className="text-gray-700 text-sm font-bold">
                       Enrolled Courses
                     </p>
-                    <p className="text-2xl font-bold text-gray-800 mt-1">0</p>
+                    <p className="text-2xl font-bold text-gray-800 mt-1">
+                      {studentData.enrolledCourses}
+                    </p>
                   </div>
                   <div className="bg-green-100 p-3 rounded-lg">
                     <span className="text-2xl">📚</span>
