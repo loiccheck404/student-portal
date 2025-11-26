@@ -30,6 +30,7 @@ export default function ResultsPage() {
   const router = useRouter();
   const [resultsData, setResultsData] = useState<ResultsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedSemester, setSelectedSemester] = useState<string>("All");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -105,91 +106,138 @@ export default function ResultsPage() {
           </div>
         </div>
 
+        {/* Semester Filter */}
+        {resultsData?.grades && resultsData.grades.length > 0 && (
+          <div className="mb-6">
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedSemester("All")}
+                className={`px-4 py-2 rounded-lg font-semibold transition-colors cursor-pointer ${
+                  selectedSemester === "All"
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                All Semesters
+              </button>
+              {Array.from(
+                new Set(resultsData.grades.map((g) => g.semester))
+              ).map((semester) => (
+                <button
+                  key={semester}
+                  onClick={() => setSelectedSemester(semester)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors cursor-pointer ${
+                    selectedSemester === semester
+                      ? "bg-blue-600 text-white"
+                      : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  {semester}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Results List */}
         {resultsData?.grades && resultsData.grades.length > 0 ? (
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Course Results ({resultsData.grades.length})
+              Course Results (
+              {
+                resultsData.grades.filter((g) =>
+                  selectedSemester === "All"
+                    ? true
+                    : g.semester === selectedSemester
+                ).length
+              }
+              )
             </h2>
 
-            {resultsData.grades.map((grade) => (
-              <div
-                key={grade.id}
-                className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-6"
-              >
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  {/* Course Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold text-gray-900">
-                        {grade.course.courseCode}
-                      </h3>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          grade.course.courseType === "Major"
-                            ? "bg-blue-100 text-blue-800"
-                            : grade.course.courseType === "Minor"
-                            ? "bg-purple-100 text-purple-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
-                      >
-                        {grade.course.courseType}
-                      </span>
-                    </div>
-                    <p className="text-gray-700 font-semibold mb-1">
-                      {grade.course.courseName}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {grade.course.credits} Credits • {grade.semester} •{" "}
-                      {grade.academicYear}
-                    </p>
-                  </div>
-
-                  {/* Grade Display */}
-                  <div className="flex items-center gap-6">
-                    {/* Score */}
-                    <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-1">Score</p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {grade.score}
+            {resultsData.grades
+              .filter((g) =>
+                selectedSemester === "All"
+                  ? true
+                  : g.semester === selectedSemester
+              )
+              .map((grade) => (
+                <div
+                  key={grade.id}
+                  className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-6"
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    {/* Course Info */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-bold text-gray-900">
+                          {grade.course.courseCode}
+                        </h3>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            grade.course.courseType === "Major"
+                              ? "bg-blue-100 text-blue-800"
+                              : grade.course.courseType === "Minor"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {grade.course.courseType}
+                        </span>
+                      </div>
+                      <p className="text-gray-700 font-semibold mb-1">
+                        {grade.course.courseName}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {grade.course.credits} Credits • {grade.semester} •{" "}
+                        {grade.academicYear}
                       </p>
                     </div>
 
-                    {/* Letter Grade */}
-                    <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-1">Grade</p>
-                      <div
-                        className={`text-3xl font-bold px-4 py-2 rounded-lg ${getGradeColor(
-                          grade.letterGrade
-                        )}`}
-                      >
-                        {grade.letterGrade}
+                    {/* Grade Display */}
+                    <div className="flex items-center gap-6">
+                      {/* Score */}
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 mb-1">Score</p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {grade.score}
+                        </p>
+                      </div>
+
+                      {/* Letter Grade */}
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 mb-1">Grade</p>
+                        <div
+                          className={`text-3xl font-bold px-4 py-2 rounded-lg ${getGradeColor(
+                            grade.letterGrade
+                          )}`}
+                        >
+                          {grade.letterGrade}
+                        </div>
+                      </div>
+
+                      {/* GPA */}
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 mb-1">GPA</p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {grade.gradePoint.toFixed(1)}
+                        </p>
                       </div>
                     </div>
+                  </div>
 
-                    {/* GPA */}
-                    <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-1">GPA</p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {grade.gradePoint.toFixed(1)}
-                      </p>
+                  {/* Remarks */}
+                  {grade.remarks && (
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <span className="text-sm font-semibold text-gray-700">
+                        Remarks:{" "}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {grade.remarks}
+                      </span>
                     </div>
-                  </div>
+                  )}
                 </div>
-
-                {/* Remarks */}
-                {grade.remarks && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <span className="text-sm font-semibold text-gray-700">
-                      Remarks:{" "}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      {grade.remarks}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow p-12 text-center">
