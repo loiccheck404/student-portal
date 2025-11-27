@@ -206,6 +206,7 @@ model Dorm {
   updatedAt   DateTime @updatedAt
 
   rooms Room[]
+  hostelApplications HostelApplication[]
 }
 
 model Room {
