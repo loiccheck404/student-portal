@@ -42,6 +42,9 @@ model Student {
   registrations   CourseRegistration[]
   grades          Grade[]
   notifications   Notification[]
+   studentFees          StudentFee[]
+  payments             Payment[]
+  hostelApplication    HostelApplication?
 }
 
 // NEW: Faculty table
@@ -143,4 +146,95 @@ model Notification {
 
   @@index([studentId])
   @@index([isRead])
+}
+
+// Fee Management
+model FeeType {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "Tuition", "Registration", "Library"
+  amount      Float    // Total amount for this fee
+  description String?
+  semester    String   // e.g., "Fall 2024", "Spring 2025"
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  studentFees StudentFee[]
+}
+
+model StudentFee {
+  id          String   @id @default(cuid())
+  studentId   String
+  feeTypeId   String
+  totalAmount Float    // Total fee amount
+  paidAmount  Float    @default(0) // How much student has paid
+  balance     Float    // Remaining balance
+  status      String   @default("Unpaid") // "Unpaid", "Partial", "Paid"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  student  Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  feeType  FeeType   @relation(fields: [feeTypeId], references: [id])
+  payments Payment[]
+
+  @@unique([studentId, feeTypeId])
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  studentId       String
+  studentFeeId    String?  // For fee payments
+  hostelAppId     String?  // For hostel payments
+  amount          Float
+  paymentMethod   String   // "MTN", "Orange", "Express"
+  transactionId   String   @unique
+  status          String   @default("Completed") // "Completed", "Failed", "Pending"
+  createdAt       DateTime @default(now())
+
+  student      Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentFee   StudentFee?      @relation(fields: [studentFeeId], references: [id])
+  hostelApp    HostelApplication? @relation(fields: [hostelAppId], references: [id])
+}
+
+// Hostel Management
+model Dorm {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g., "Block A", "Block B"
+  description String?
+  totalRooms  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rooms Room[]
+}
+
+model Room {
+  id              String   @id @default(cuid())
+  dormId          String
+  roomNumber      String   // e.g., "101", "102"
+  isOccupied      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  dorm              Dorm                @relation(fields: [dormId], references: [id], onDelete: Cascade)
+  hostelApplications HostelApplication[]
+
+  @@unique([dormId, roomNumber])
+}
+
+model HostelApplication {
+  id          String   @id @default(cuid())
+  studentId   String   @unique // One application per student
+  dormId      String?  // Assigned by admin
+  roomId      String?  @unique // Selected by student
+  feeAmount   Float    @default(50000) // Fixed hostel fee (50,000 FCFA)
+  paidAmount  Float    @default(0)
+  status      String   @default("Pending") // "Pending", "Paid"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  student  Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  dorm     Dorm?     @relation(fields: [dormId], references: [id])
+  room     Room?     @relation(fields: [roomId], references: [id])
+  payments Payment[]
 }
