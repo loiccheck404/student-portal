@@ -24,6 +24,7 @@ interface StudentData {
   };
   enrolledCourses: number;
   gpa: string;
+  pendingFees: number;
 }
 
 export default function DashboardPage() {
@@ -334,7 +335,11 @@ export default function DashboardPage() {
                     <p className="text-gray-700 text-sm font-bold">
                       Pending Fees
                     </p>
-                    <p className="text-2xl font-bold text-gray-800 mt-1">-</p>
+                    <p className="text-2xl font-bold text-gray-800 mt-1">
+                      {studentData.pendingFees
+                        ? studentData.pendingFees.toLocaleString() + " FCFA"
+                        : "0 FCFA"}
+                    </p>
                   </div>
                   <div className="bg-yellow-100 p-3 rounded-lg">
                     <span className="text-2xl">💰</span>
