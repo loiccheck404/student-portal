@@ -42,6 +42,16 @@ export async function GET() {
       );
     }
 
+    // Calculate pending fees
+    const studentFees = await prisma.studentFee.findMany({
+      where: { studentId: user.student.id },
+    });
+
+    const totalPendingFees = studentFees.reduce(
+      (sum, fee) => sum + fee.balance,
+      0
+    );
+
     // Calculate GPA
     const grades = await prisma.grade.findMany({
       where: { studentId: user.student.id },
@@ -68,6 +78,7 @@ export async function GET() {
       ...user.student,
       enrolledCourses: user.student.registrations.length,
       gpa,
+      pendingFees: totalPendingFees,
     });
   } catch (error) {
     console.error("Error fetching student profile:", error);
@@ -113,9 +124,20 @@ export async function PUT(request: Request) {
       },
     });
 
+    // Calculate pending fees
+    const studentFees = await prisma.studentFee.findMany({
+      where: { studentId: updatedStudent.id },
+    });
+
+    const totalPendingFees = studentFees.reduce(
+      (sum, fee) => sum + fee.balance,
+      0
+    );
+
     return NextResponse.json({
       ...updatedStudent,
-      enrolledCourses: updatedStudent.registrations.length, // ✅ CHANGED
+      enrolledCourses: updatedStudent.registrations.length,
+      pendingFees: totalPendingFees,
     });
   } catch (error) {
     console.error("Error updating student profile:", error);
