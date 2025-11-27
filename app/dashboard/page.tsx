@@ -265,6 +265,13 @@ export default function DashboardPage() {
           >
             💰 Payments
           </button>
+
+          <button
+            onClick={() => router.push("/dashboard/hostel")}
+            className="w-full text-left px-4 py-3 rounded-lg mb-2 transition-colors font-semibold cursor-pointer text-gray-700 hover:bg-gray-50"
+          >
+            🏢 Hostel
+          </button>
         </nav>
 
         <div className="absolute bottom-0 w-64 p-4 border-t bg-white">
