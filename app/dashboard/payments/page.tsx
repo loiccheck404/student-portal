@@ -78,9 +78,12 @@ export default function PaymentsPage() {
     }
 
     if (amount > fee!.balance) {
-      alert(
-        `Amount cannot exceed balance of ${fee!.balance.toLocaleString()} FCFA`
-      );
+      setModal({
+        isOpen: true,
+        title: "Invalid Amount",
+        message: `Amount cannot exceed balance of ${fee!.balance.toLocaleString()} FCFA`,
+        type: "error",
+      });
       return;
     }
 
@@ -112,7 +115,12 @@ export default function PaymentsPage() {
           setSelectedMethod("");
           fetchFees(); // Refresh fees
         } else {
-          alert("Payment failed. Please try again.");
+          setModal({
+            isOpen: true,
+            title: "Payment Failed",
+            message: "Payment failed. Please try again.",
+            type: "error",
+          });
         }
       } catch (error) {
         console.error("Payment error:", error);

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Modal from "@/app/components/Modal";
 
 interface HostelApplication {
   id: string;
@@ -29,12 +30,25 @@ interface HostelApplication {
 
 export default function HostelPage() {
   const router = useRouter();
-  const [application, setApplication] = useState<HostelApplication | null>(null);
+  const [application, setApplication] = useState<HostelApplication | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [showPayment, setShowPayment] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState("");
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
 
   useEffect(() => {
     fetchApplication();
@@ -64,11 +78,21 @@ export default function HostelPage() {
         fetchApplication();
       } else {
         const data = await response.json();
-        alert(data.error || "Failed to submit application");
+        setModal({
+          isOpen: true,
+          title: "Application Failed",
+          message: data.error || "Failed to submit application",
+          type: "error",
+        });
       }
     } catch (error) {
       console.error("Error applying:", error);
-      alert("Failed to submit application");
+      setModal({
+        isOpen: true,
+        title: "Application Failed",
+        message: "Failed to submit application",
+        type: "error",
+      });
     } finally {
       setApplying(false);
     }
@@ -78,13 +102,23 @@ export default function HostelPage() {
     const amount = parseFloat(paymentAmount);
 
     if (!amount || amount <= 0) {
-      alert("Please enter a valid amount");
+      setModal({
+        isOpen: true,
+        title: "Invalid Amount",
+        message: "Please enter a valid amount",
+        type: "error",
+      });
       return;
     }
 
     const balance = application!.feeAmount - application!.paidAmount;
     if (amount > balance) {
-      alert(`Amount cannot exceed balance of ${balance.toLocaleString()} FCFA`);
+      setModal({
+        isOpen: true,
+        title: "Invalid Amount",
+        message: `Amount cannot exceed balance of ${balance.toLocaleString()} FCFA`,
+        type: "error",
+      });
       return;
     }
 
@@ -102,17 +136,32 @@ export default function HostelPage() {
         });
 
         if (response.ok) {
-          alert(`Payment of ${amount.toLocaleString()} FCFA via ${method} successful!`);
+          setModal({
+            isOpen: true,
+            title: "Payment Successful",
+            message: `Payment of ${amount.toLocaleString()} FCFA via ${method} was successful!`,
+            type: "success",
+          });
           setShowPayment(false);
           setPaymentAmount("");
           setSelectedMethod("");
           fetchApplication();
         } else {
-          alert("Payment failed. Please try again.");
+          setModal({
+            isOpen: true,
+            title: "Payment Failed",
+            message: "Payment failed. Please try again.",
+            type: "error",
+          });
         }
       } catch (error) {
         console.error("Payment error:", error);
-        alert("Payment failed. Please try again.");
+        setModal({
+          isOpen: true,
+          title: "Payment Failed",
+          message: "Payment failed. Please try again.",
+          type: "error",
+        });
       } finally {
         setSelectedMethod("");
       }
@@ -138,7 +187,9 @@ export default function HostelPage() {
           >
             ← Back to Dashboard
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">Hostel Accommodation</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Hostel Accommodation
+          </h1>
           <p className="text-gray-600 mt-2">Apply for campus accommodation</p>
         </div>
 
@@ -150,7 +201,8 @@ export default function HostelPage() {
               Apply for Hostel Accommodation
             </h2>
             <p className="text-gray-600 mb-6">
-              Submit your application to be assigned a dorm room. Hostel fee: 50,000 FCFA
+              Submit your application to be assigned a dorm room. Hostel fee:
+              50,000 FCFA
             </p>
             <button
               onClick={handleApply}
@@ -169,7 +221,9 @@ export default function HostelPage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">Application Status</h2>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Application Status
+                  </h2>
                   <p className="text-gray-600 text-sm mt-1">
                     {application.status === "Pending" && !application.dorm
                       ? "Waiting for dorm assignment by admin"
@@ -195,7 +249,9 @@ export default function HostelPage() {
                   <p className="text-blue-900 font-semibold mb-2">
                     📍 Assigned Dorm: {application.dorm.name}
                   </p>
-                  <p className="text-blue-800 text-sm">{application.dorm.description}</p>
+                  <p className="text-blue-800 text-sm">
+                    {application.dorm.description}
+                  </p>
                   {application.room && (
                     <p className="text-blue-900 font-semibold mt-2">
                       🚪 Room Number: {application.room.roomNumber}
@@ -221,7 +277,10 @@ export default function HostelPage() {
                 <div>
                   <p className="text-gray-600 text-sm">Balance</p>
                   <p className="text-lg font-bold text-red-600">
-                    {(application.feeAmount - application.paidAmount).toLocaleString()} FCFA
+                    {(
+                      application.feeAmount - application.paidAmount
+                    ).toLocaleString()}{" "}
+                    FCFA
                   </p>
                 </div>
               </div>
@@ -230,7 +289,9 @@ export default function HostelPage() {
             {/* Payment Section */}
             {application.feeAmount - application.paidAmount > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Pay Hostel Fees</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  Pay Hostel Fees
+                </h3>
 
                 {!showPayment ? (
                   <button
@@ -254,7 +315,10 @@ export default function HostelPage() {
                         max={application.feeAmount - application.paidAmount}
                       />
                       <p className="text-sm text-gray-500 mt-1">
-                        Maximum: {(application.feeAmount - application.paidAmount).toLocaleString()}{" "}
+                        Maximum:{" "}
+                        {(
+                          application.feeAmount - application.paidAmount
+                        ).toLocaleString()}{" "}
                         FCFA
                       </p>
                     </div>
@@ -271,10 +335,16 @@ export default function HostelPage() {
                           className="flex flex-col items-center justify-center p-4 border-2 border-yellow-400 rounded-lg hover:bg-yellow-50 transition disabled:opacity-50 disabled:cursor-not-allowed bg-white"
                         >
                           <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mb-2">
-                            <span className="text-white font-bold text-xl">M</span>
+                            <span className="text-white font-bold text-xl">
+                              M
+                            </span>
                           </div>
-                          <span className="text-gray-900 font-semibold">MTN</span>
-                          <span className="text-gray-600 text-sm">Mobile Money</span>
+                          <span className="text-gray-900 font-semibold">
+                            MTN
+                          </span>
+                          <span className="text-gray-600 text-sm">
+                            Mobile Money
+                          </span>
                         </button>
 
                         {/* Orange */}
@@ -284,9 +354,13 @@ export default function HostelPage() {
                           className="flex flex-col items-center justify-center p-4 border-2 border-orange-500 rounded-lg hover:bg-orange-50 transition disabled:opacity-50 disabled:cursor-not-allowed bg-white"
                         >
                           <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mb-2">
-                            <span className="text-white font-bold text-xl">O</span>
+                            <span className="text-white font-bold text-xl">
+                              O
+                            </span>
                           </div>
-                          <span className="text-gray-900 font-semibold">Orange</span>
+                          <span className="text-gray-900 font-semibold">
+                            Orange
+                          </span>
                           <span className="text-gray-600 text-sm">Money</span>
                         </button>
 
@@ -297,10 +371,16 @@ export default function HostelPage() {
                           className="flex flex-col items-center justify-center p-4 border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed bg-white"
                         >
                           <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-2">
-                            <span className="text-white font-bold text-xl">E</span>
+                            <span className="text-white font-bold text-xl">
+                              E
+                            </span>
                           </div>
-                          <span className="text-gray-900 font-semibold">Express</span>
-                          <span className="text-gray-600 text-sm">Exchange</span>
+                          <span className="text-gray-900 font-semibold">
+                            Express
+                          </span>
+                          <span className="text-gray-600 text-sm">
+                            Exchange
+                          </span>
                         </button>
                       </div>
                     </div>
@@ -332,10 +412,15 @@ export default function HostelPage() {
             {/* Payment History */}
             {application.payments.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Payment History</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  Payment History
+                </h3>
                 <div className="space-y-2">
                   {application.payments.map((payment) => (
-                    <div key={payment.id} className="flex justify-between text-sm">
+                    <div
+                      key={payment.id}
+                      className="flex justify-between text-sm"
+                    >
                       <span className="text-gray-600">
                         {new Date(payment.createdAt).toLocaleDateString()} -{" "}
                         {payment.paymentMethod}
@@ -351,6 +436,13 @@ export default function HostelPage() {
           </>
         )}
       </div>
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+      />
     </div>
   );
 }

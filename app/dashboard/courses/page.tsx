@@ -6,6 +6,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CourseCard from "./CourseCard";
 import RegistrationSummary from "./RegistrationSummary";
+import ConfirmModal from "@/app/components/ConfirmModal";
+import Modal from "@/app/components/Modal";
 
 interface Course {
   id: string;
@@ -36,6 +38,24 @@ export default function CoursesPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [filter, setFilter] = useState<string>("All");
+  const [confirmDrop, setConfirmDrop] = useState<{
+    isOpen: boolean;
+    courseId: string | null;
+  }>({
+    isOpen: false,
+    courseId: null,
+  });
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -56,11 +76,21 @@ export default function CoursesPage() {
         setCourses(data.courses);
         setStudent(data.student);
       } else {
-        alert(data.error || "Failed to fetch courses");
+        setModal({
+          isOpen: true,
+          title: "Error",
+          message: data.error || "Failed to fetch courses",
+          type: "error",
+        });
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
-      alert("Failed to load courses");
+      setModal({
+        isOpen: true,
+        title: "Error",
+        message: "Failed to load courses",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -90,53 +120,34 @@ export default function CoursesPage() {
           )
         );
         window.dispatchEvent(new Event("courseRegistered"));
+        setModal({
+          isOpen: true,
+          title: "Registration Successful",
+          message: "You have successfully registered for this course!",
+          type: "success",
+        });
       } else {
-        alert(data.error || "Failed to register");
+        setModal({
+          isOpen: true,
+          title: "Registration Failed",
+          message: data.error || "Failed to register",
+          type: "error",
+        });
       }
     } catch (error) {
       console.error("Error registering:", error);
-      alert("Failed to register for course");
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleUnregister = async (courseId: string) => {
-    if (!confirm("Are you sure you want to drop this course?")) return;
-
-    setActionLoading(true);
-    try {
-      const response = await fetch("/api/courses/register", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId }),
+      setModal({
+        isOpen: true,
+        title: "Registration Failed",
+        message: "Failed to register for course",
+        type: "error",
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setCourses((prev) =>
-          prev.map((course) =>
-            course.id === courseId
-              ? {
-                  ...course,
-                  isRegistered: false,
-                  availableSpots: course.availableSpots + 1,
-                }
-              : course
-          )
-        );
-        window.dispatchEvent(new Event("courseDropped"));
-      } else {
-        alert(data.error || "Failed to unregister");
-      }
-    } catch (error) {
-      console.error("Error unregistering:", error);
-      alert("Failed to drop course");
     } finally {
       setActionLoading(false);
     }
   };
+
+  
 
   // Calculate summary stats
   const registeredCourses = courses.filter((c) => c.isRegistered);
@@ -176,6 +187,61 @@ export default function CoursesPage() {
       </div>
     );
   }
+
+  const handleUnregister = async (courseId: string) => {
+    setConfirmDrop({ isOpen: true, courseId: courseId });
+  };
+
+  const confirmDropCourse = async (courseId: string) => {
+    setActionLoading(true);
+    try {
+      const response = await fetch("/api/courses/register", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCourses((prev) =>
+          prev.map((course) =>
+            course.id === courseId
+              ? {
+                  ...course,
+                  isRegistered: false,
+                  availableSpots: course.availableSpots + 1,
+                }
+              : course
+          )
+        );
+        window.dispatchEvent(new Event("courseDropped"));
+        setModal({
+          isOpen: true,
+          title: "Course Dropped",
+          message: "You have successfully dropped this course.",
+          type: "success",
+        });
+      } else {
+        setModal({
+          isOpen: true,
+          title: "Drop Failed",
+          message: data.error || "Failed to unregister",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error unregistering:", error);
+      setModal({
+        isOpen: true,
+        title: "Drop Failed",
+        message: "Failed to drop course",
+        type: "error",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -283,6 +349,28 @@ export default function CoursesPage() {
           </div>
         )}
       </div>
+
+      {/* Confirm Drop Modal */}
+      <ConfirmModal
+        isOpen={confirmDrop.isOpen}
+        onClose={() => setConfirmDrop({ isOpen: false, courseId: null })}
+        onConfirm={() =>
+          confirmDrop.courseId && confirmDropCourse(confirmDrop.courseId)
+        }
+        title="Drop Course?"
+        message="Are you sure you want to drop this course? This action cannot be undone."
+        confirmText="Yes, Drop Course"
+        type="danger"
+      />
+
+      {/* Success/Error Modal */}
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+      />
     </div>
   );
 }
