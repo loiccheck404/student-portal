@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Modal from "@/app/components/Modal";
 
 interface Payment {
   id: string;
@@ -35,6 +36,17 @@ export default function PaymentsPage() {
   const [payingFeeId, setPayingFeeId] = useState<string | null>(null);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [selectedMethod, setSelectedMethod] = useState("");
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
 
   useEffect(() => {
     fetchFees();
@@ -57,8 +69,12 @@ export default function PaymentsPage() {
     const fee = fees.find((f) => f.id === feeId);
 
     if (!amount || amount <= 0) {
-      alert("Please enter a valid amount");
-      return;
+      setModal({
+        isOpen: true,
+        title: "Invalid Amount",
+        message: "Please enter a valid amount",
+        type: "error",
+      });
     }
 
     if (amount > fee!.balance) {
@@ -85,9 +101,12 @@ export default function PaymentsPage() {
         });
 
         if (response.ok) {
-          alert(
-            `Payment of ${amount.toLocaleString()} FCFA via ${method} successful!`
-          );
+          setModal({
+            isOpen: true,
+            title: "Payment Successful",
+            message: `Payment of ${amount.toLocaleString()} FCFA via ${method} was successful!`,
+            type: "success",
+          });
           setPayingFeeId(null);
           setPaymentAmount("");
           setSelectedMethod("");
@@ -97,7 +116,12 @@ export default function PaymentsPage() {
         }
       } catch (error) {
         console.error("Payment error:", error);
-        alert("Payment failed. Please try again.");
+        setModal({
+          isOpen: true,
+          title: "Payment Failed",
+          message: "Payment failed. Please try again.",
+          type: "error",
+        });
       } finally {
         setSelectedMethod("");
       }
@@ -364,6 +388,14 @@ export default function PaymentsPage() {
           </div>
         )}
       </div>
+      {/* Modal */}
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+      />
     </div>
   );
 }
