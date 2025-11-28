@@ -54,6 +54,7 @@ export default function StudentsPage() {
       setIsLoading(false);
     }
   };
+
   const filterStudents = () => {
     let filtered = students;
 
@@ -78,10 +79,12 @@ export default function StudentsPage() {
 
     // Level filter
     if (selectedLevel !== "all") {
-      filtered = filtered.filter(
-        (student) => student.level === parseInt(selectedLevel)
-      );
+      const levelNum = parseInt(selectedLevel);
+      filtered = filtered.filter((student) => student.level === levelNum);
     }
+
+    // ADD THIS LINE HERE - right before setFilteredStudents
+    console.log("Filtering:", { selectedLevel, filtered, students });
 
     setFilteredStudents(filtered);
   };
