@@ -29,7 +29,7 @@ export async function GET() {
       name: `${student.firstName} ${student.lastName}`,
       email: student.user.email,
       phone: student.phone,
-      level: student.level,
+      level: Number(student.level),
       department: {
         name: student.department.name,
         code: student.department.code,
