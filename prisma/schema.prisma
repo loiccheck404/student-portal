@@ -239,3 +239,13 @@ model HostelApplication {
   room     Room?     @relation(fields: [roomId], references: [id])
   payments Payment[]
 }
+
+model Admin {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin") // for future: super_admin, admin, etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
