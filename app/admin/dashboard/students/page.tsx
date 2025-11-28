@@ -43,10 +43,10 @@ export default function StudentsPage() {
       setStudents(data);
       setFilteredStudents(data);
 
-      // Extract unique departments
-     const uniqueDepts = Array.from(
-  new Set(data.map((s: Student) => s.department.code))
-) as string[];
+      // Extract unique departments - USE 'data' HERE, not 'students'
+      const uniqueDepts = Array.from(
+        new Set(data.map((s: Student) => s.department.code))
+      ) as string[];
       setDepartments(uniqueDepts);
     } catch (error) {
       console.error("Failed to fetch students:", error);
@@ -54,7 +54,6 @@ export default function StudentsPage() {
       setIsLoading(false);
     }
   };
-
   const filterStudents = () => {
     let filtered = students;
 

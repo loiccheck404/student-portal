@@ -19,9 +19,6 @@ export async function GET() {
           },
         },
       },
-      orderBy: {
-        name: "asc",
-      } as any,
     });
 
     return NextResponse.json(students);
