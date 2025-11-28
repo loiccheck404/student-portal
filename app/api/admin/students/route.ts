@@ -13,6 +13,7 @@ export async function GET() {
 
     const students = await prisma.student.findMany({
       include: {
+        user: true,
         department: {
           include: {
             faculty: true,
@@ -21,7 +22,24 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(students);
+    // Transform data to combine firstName + lastName into name
+    const transformedStudents = students.map((student) => ({
+      id: student.id,
+      matricNumber: student.matricNumber,
+      name: `${student.firstName} ${student.lastName}`,
+      email: student.user.email,
+      phone: student.phone,
+      level: student.level,
+      department: {
+        name: student.department.name,
+        code: student.department.code,
+        faculty: {
+          name: student.department.faculty.name,
+        },
+      },
+    }));
+
+    return NextResponse.json(transformedStudents);
   } catch (error) {
     console.error("Error fetching students:", error);
     return NextResponse.json(

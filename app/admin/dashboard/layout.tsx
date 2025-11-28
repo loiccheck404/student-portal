@@ -16,10 +16,8 @@ export default function AdminLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (status === "unauthenticated" || session?.user?.role !== "admin") {
       router.push("/admin/login");
-    } else if (session?.user?.role !== "admin") {
-      router.push("/login");
     }
   }, [status, session, router]);
 
