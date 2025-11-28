@@ -296,7 +296,9 @@ export default function DashboardPage() {
               {studentData.matricNumber} • {studentData.department.name}
             </p>
           </div>
-          <NotificationBell />
+          <div className="hidden lg:block">
+            <NotificationBell />
+          </div>
         </div>
 
         {/* Overview Tab */}
