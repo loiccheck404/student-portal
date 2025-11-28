@@ -18,6 +18,28 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        const admin = await prisma.admin.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (admin) {
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password,
+            admin.password
+          );
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: admin.id,
+            email: admin.email,
+            role: "admin",
+            name: admin.name,
+          };
+        }
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -54,6 +76,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.name = user.name;
       }
       return token;
     },
@@ -61,6 +84,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id;
         session.user.role = token.role;
+        session.user.name = token.name;
       }
       return session;
     },
