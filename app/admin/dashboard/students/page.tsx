@@ -44,9 +44,9 @@ export default function StudentsPage() {
       setFilteredStudents(data);
 
       // Extract unique departments
-      const uniqueDepts = Array.from(
-        new Set(data.map((s: Student) => s.department.code))
-      );
+     const uniqueDepts = Array.from(
+  new Set(data.map((s: Student) => s.department.code))
+) as string[];
       setDepartments(uniqueDepts);
     } catch (error) {
       console.error("Failed to fetch students:", error);
