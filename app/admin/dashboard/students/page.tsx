@@ -21,7 +21,6 @@ interface Student {
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
-  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
@@ -32,18 +31,14 @@ export default function StudentsPage() {
     fetchStudents();
   }, []);
 
-  useEffect(() => {
-    filterStudents();
-  }, [searchQuery, selectedDepartment, selectedLevel, students]);
-
   const fetchStudents = async () => {
     try {
       const response = await fetch("/api/admin/students");
       const data = await response.json();
+      console.log("Fetched students data:", data);
       setStudents(data);
-      setFilteredStudents(data);
 
-      // Extract unique departments - USE 'data' HERE, not 'students'
+      // Extract unique departments
       const uniqueDepts = Array.from(
         new Set(data.map((s: Student) => s.department.code))
       ) as string[];
@@ -55,40 +50,6 @@ export default function StudentsPage() {
     }
   };
 
-  const filterStudents = () => {
-    let filtered = students;
-
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (student) =>
-          student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          student.matricNumber
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          student.email.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Department filter
-    if (selectedDepartment !== "all") {
-      filtered = filtered.filter(
-        (student) => student.department.code === selectedDepartment
-      );
-    }
-
-    // Level filter
-    if (selectedLevel !== "all") {
-      const levelNum = parseInt(selectedLevel);
-      filtered = filtered.filter((student) => student.level === levelNum);
-    }
-
-    // ADD THIS LINE HERE - right before setFilteredStudents
-    console.log("Filtering:", { selectedLevel, filtered, students });
-
-    setFilteredStudents(filtered);
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -96,6 +57,42 @@ export default function StudentsPage() {
       </div>
     );
   }
+
+  // Filter students on render
+  let displayedStudents = students;
+
+  // Search filter
+  if (searchQuery) {
+    displayedStudents = displayedStudents.filter(
+      (student) =>
+        student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        student.matricNumber
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        student.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
+  // Department filter
+  if (selectedDepartment !== "all") {
+    displayedStudents = displayedStudents.filter(
+      (student) => student.department.code === selectedDepartment
+    );
+  }
+
+  // Level filter
+  if (selectedLevel !== "all") {
+    displayedStudents = displayedStudents.filter(
+      (student) => student.level === parseInt(selectedLevel)
+    );
+  }
+
+  console.log("Final filter state:", {
+    students: students.length,
+    displayedStudents: displayedStudents.length,
+    selectedLevel,
+    studentsLevels: students.map((s) => s.level),
+  });
 
   return (
     <div>
@@ -168,7 +165,7 @@ export default function StudentsPage() {
         </div>
 
         <div className="mt-4 text-sm text-gray-600">
-          Showing {filteredStudents.length} of {students.length} students
+          Showing {displayedStudents.length} of {students.length} students
         </div>
       </div>
 
@@ -199,7 +196,7 @@ export default function StudentsPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredStudents.length === 0 ? (
+              {displayedStudents.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
@@ -209,7 +206,7 @@ export default function StudentsPage() {
                   </td>
                 </tr>
               ) : (
-                filteredStudents.map((student) => (
+                displayedStudents.map((student) => (
                   <tr key={student.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {student.matricNumber}
