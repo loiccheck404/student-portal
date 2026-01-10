@@ -1,0 +1,6 @@
+Line 70: Add "return;" after the closing }
+
+Should be:
+    });
+    return;  // ADD THIS
+  }
