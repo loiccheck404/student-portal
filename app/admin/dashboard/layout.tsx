@@ -88,7 +88,7 @@ export default function AdminLayout({
             👥 Students
           </Link>
           <Link
-            href="/admin/dashboard/hostel"
+            href="/admin/dashboard/hostels"
             onClick={() => setIsSidebarOpen(false)}
             className="block px-4 py-3 rounded-md hover:bg-gray-100 text-gray-700"
           >

@@ -76,7 +76,7 @@ export default function AdminDashboard() {
             <div className="text-4xl">⏳</div>
           </div>
           <Link
-            href="/admin/dashboard/hostel"
+            href="/admin/dashboard/hostels"
             className="text-blue-600 text-sm mt-4 inline-block hover:underline"
           >
             Review now →
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
           </Link>
 
           <Link
-            href="/admin/dashboard/hostel"
+            href="/admin/dashboard/hostels"
             className="p-4 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
           >
             <div className="text-2xl mb-2">🏢</div>
