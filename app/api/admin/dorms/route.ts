@@ -3,10 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -14,21 +11,25 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const rooms = await prisma.room.findMany({
-      where: {
-        dormId: params.id,
+    const dorms = await prisma.dorm.findMany({
+      include: {
+        rooms: {
+          orderBy: {
+            roomNumber: "asc",
+          },
+        },
       },
       orderBy: {
-        roomNumber: "asc",
+        name: "asc",
       },
     });
 
-    return NextResponse.json({ rooms });
+    return NextResponse.json({ dorms });
   } catch (error) {
-    console.error("Error fetching rooms:", error);
+    console.error("Error fetching dorms:", error);
     return NextResponse.json(
-      { error: "Failed to fetch rooms" },
-      { status: 500 }
+      { error: "Failed to fetch dorms" },
+      { status: 500 },
     );
   }
 }
